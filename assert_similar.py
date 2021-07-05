@@ -53,17 +53,6 @@ def handler(event, context):
         return {
             "is_correct": assert_similar(student_answer, correct_answer, tolerance)
         }
-        
-event = {
-    "body": {
-        "student_answer": 3,
-        "correct_answer": 3.5,
-        "tolerance": {
-            "type": "absolute",
-            "value": 1
-        }
-    }
-}
 
 if __name__ == "__main__":
     from pprint import pprint
