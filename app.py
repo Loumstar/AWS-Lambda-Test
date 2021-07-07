@@ -1,4 +1,4 @@
-import jsonschema
+import json, jsonschema
 
 schema = {
     "$schema": "http://json-schema.org/draft/2019-09/schema#",
@@ -40,12 +40,18 @@ def assert_similar(student_answer, correct_answer, tolerance):
 
 def handler(event, context):
     if "body" not in event:
-        return {"error": "request has no body"}
-    elif not is_valid(event["body"], schema):
-        return {"error": "body threw a schema error."}
-    else:
-        body = event["body"]
+        return {"message": "request has no body"}
 
+    body = json.loads(event["body"])
+
+    if not is_valid(body, schema):
+        return {
+            "message": "body threw a schema error.",
+            "schema_error": "",
+            "schema": schema,
+            "body": event["body"]
+        }
+    else:
         student_answer = body["student_answer"]
         correct_answer = body["correct_answer"]
         tolerance = body["tolerance"]
@@ -54,6 +60,7 @@ def handler(event, context):
             "is_correct": assert_similar(student_answer, correct_answer, tolerance)
         }
 
+"""
 if __name__ == "__main__":
     from pprint import pprint
 
@@ -70,4 +77,5 @@ if __name__ == "__main__":
 
     pprint(event)
     pprint(handler(event, {}))
+"""
     

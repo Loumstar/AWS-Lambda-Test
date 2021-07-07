@@ -1,12 +1,14 @@
 # Base image is Python 3.8 provided by AWS Lambda in Docker Hub
 FROM public.ecr.aws/lambda/python:3.8
 
+WORKDIR /app
+
 # Copy and install jsonschema package
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
 
 # Copy the script
-COPY assert_similar.py ${LAMBDA_TASK_ROOT}
+COPY app.py .
 
 # Run the handler function
-CMD ["assert_similar.handler"]
+CMD ["/app/app.handler"]
